@@ -1,0 +1,9 @@
+---
+applications:
+- name: trader-svc
+  host: trader-svc
+  memory: 64M
+  instances: 1
+  disk_quota: 32M
+  command: /app/bin/trader-svc
+  buildpack : https://github.com/cloudfoundry/go-buildpack.git

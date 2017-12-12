@@ -1,0 +1,185 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Werpas Event Hub API",
+    "description": "Werpas Event Hub API documentation"
+  },
+  "tags" : [
+    {
+      "name" : "diagnostic",
+      "description": "For diagnostic purposes"
+    },
+    {
+      "name" : "geolocation",
+      "description": "For geolocation purposes"
+    }
+  ],
+  "basePath": "/api/v1",
+  "paths": {
+    "/info": {
+      "get": {
+        "tags" : [ "diagnostic" ],
+        "summary": "Gets run-time information about this service",
+        "description": "Gets run-time information about this service.",
+        "produces": [
+          "text/plain",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "Bearer token containing uaa user scope - the authentication for this user",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/ProcessInfo"
+            }
+          }
+        }
+      }
+    },
+    "/near": {
+      "get": {
+        "tags" : [ "geolocation" ],
+        "summary": "Gets near events.",
+        "description": "Gets near events.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "long",
+            "in": "query",
+            "required": true,
+            "description": "longitude",
+            "type": "float",
+            "minimum": -180,
+            "maximum": 180
+          },
+          {
+            "name": "lat",
+            "in": "query",
+            "required": true,
+            "description": "latitude",
+            "type": "float",
+            "minimum": -90,
+            "maximum": 90
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "description": "Sort Parameter",
+            "type": "string",
+            "enum": [
+              "eventtype","eventname","eventdesc","datetime","distance"
+            ],
+            "default": "distance"
+          },
+          {
+            "name": "radius",
+            "in": "query",
+            "required": false,
+            "description": "radius in meters",
+            "type": "number",
+            "default": 1000
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "description": "Sort Order",
+            "type": "string",
+            "enum": [
+              "asc", "desc"
+            ],
+            "default": "asc"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Sort Order",
+            "type": "number",
+            "default": 100
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "404": {
+            "description": "Endpoint Not Found",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/ping": {
+      "get": {
+        "tags" : [ "diagnostic" ],
+        "summary": "Validates that the service is running and responding to requests",
+        "description": "Validates that the service is running and responding to requests. It will also return the last time data was received.",
+        "produces": [
+          "application/json",
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "Bearer token containing uaa user scope - the authentication for this user",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "404": {
+            "description": "Endpoint Not Found",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ProcessInfo": {
+      "type": "object",
+      "description": "This is used primarily for debugging so the data returned can change depending on the need. The data given below should be considered the minimum.",
+      "properties": {
+        "predix-space": {
+          "type": "string"
+        },
+        "instance-no": {
+          "type": "integer"
+        },
+        "uptime": {
+          "type": "number"
+        },
+        "max-go-threads": {
+          "type": "integer"
+        },
+        "bytesUsed": {
+          "type": "number"
+        },
+        "bytesAvail": {
+          "type": "number"
+        }
+      }
+    }
+  }
+}
